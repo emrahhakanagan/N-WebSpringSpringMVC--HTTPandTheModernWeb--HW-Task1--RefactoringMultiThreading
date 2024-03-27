@@ -3,7 +3,6 @@ package org.example;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -105,10 +104,9 @@ public class Server {
 
     private Handler findHandler(Request request) {
         Map<String, Handler> methodHandlers = handlers.get(request.getMethod());
-        if (methodHandlers != null) {
-            return methodHandlers.get(request.getPath());
-        }
-        return null;
+
+        // Ищем путь, не полный, а только сам путь без QS
+        return methodHandlers.getOrDefault(request.getPathWithoutQS(), null);
     }
 
     private void sendNotFound(BufferedOutputStream out) throws IOException {
